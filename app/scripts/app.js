@@ -16,7 +16,17 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch'
-  ])
+  ]).constant("CONFIG", {
+    "dice": {
+      sides: 6,
+      hit: {
+        oneFails: true, 
+      },
+      wound: {
+        oneFails: true, 
+      }
+    },
+  })
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
