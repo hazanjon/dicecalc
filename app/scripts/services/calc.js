@@ -25,20 +25,31 @@ angular.module('diceCalcApp')
         })
     }
     
-    calcFactory.rollChance = function (modifier, targetValue, settings){
+    calcFactory.hitChance = function (modifier, targetValue, settings){
             
-      var minModifiedTarget = 0;
+      var maxModifier = modifier;
       if(settings.oneFails){
-        minModifiedTarget = 1;
+        maxModifier = settings.diceSides - 1;
       }
+      // console.log('maxModifier', maxModifier)
+      modifier = Math.min(modifier, maxModifier);
       
-      var modifiedTarget = Math.max(targetValue - modifier, minModifiedTarget);
+      var modifiedTarget = targetValue - modifier;
       
-      // console.log(modifiedTarget);
-      // console.log(settings);
-      // console.log(1 - (modifiedTarget / settings.diceSides));
+      // console.log('modifiedTarget', modifiedTarget);
+      // console.log('settings', settings);
       
-      return Math.max(1 - (modifiedTarget / settings.diceSides), 0);
+      //if(modifiedTarget <= settings.diceSides){
+        return calcFactory.rollChance(modifiedTarget, settings.diceSides);
+      // }else if(modifiedTarget < settings.diceSides){
+        
+      // }
+    }
+    
+    calcFactory.rollChance = function (targetValue, diceSides){
+      // console.log(diceSides + 1 - targetValue);   
+      // console.log((diceSides + 1 - targetValue) / diceSides);   
+      return Math.max((diceSides + 1 - targetValue) / diceSides, 0);
     }
     
     calcFactory.hitChanceBuff = function (chance, modifier, targetValue, dice){
