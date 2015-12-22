@@ -1,0 +1,36 @@
+<div class="row" ng-if="display.attack">
+	<div class="col-lg-4">
+		<span>Attack</span>
+	</div>
+	<div class="col-lg-8">
+		<span ng-if="!editable">{{profile.toHitModifier}}</span>
+		<input ng-if="editable" type="text" ng-model="profile.toHitModifier" class="form-control" />
+	</div>
+</div>
+<div class="row" ng-if="display.defense">
+	<div class="col-lg-4">
+		<span >Defense</span>
+	</div>
+	<div class="col-lg-8">
+		<span ng-if="!editable">{{profile.toWoundModifier}}</span>
+		<input ng-if="editable" type="text" ng-model="profile.toWoundModifier" class="form-control" />
+	</div>
+</div>
+<div class="row" ng-if="display.armor">
+	<div class="col-lg-4">
+		<span>Armor</span>
+	</div>
+	<div class="col-lg-8">
+		<span ng-if="!editable">{{profile.armor}}</span>
+		<input ng-if="editable" type="text" ng-model="profile.armor" class="form-control" />
+	</div>
+</div>
+<div class="row" ng-if="display.hp">
+	<div class="col-lg-4">
+		<span>Health</span>
+	</div>
+	<div class="col-lg-8">
+		<span ng-if="!editable">{{profile.hp}}</span>
+		<input ng-if="editable" type="text" ng-model="profile.hp" class="form-control" />
+	</div>
+</div>

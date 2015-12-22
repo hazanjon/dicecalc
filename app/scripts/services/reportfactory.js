@@ -17,16 +17,20 @@ angular.module('diceCalcApp')
 		function reportFactory(intialData) {
 				var self = this;
 			
-				var weaponProfile = function (){
+				var weaponProfile = function (name, str, ap, shots, number){
+					
 					var profile = {
-						name:'test',
-						toWoundModifier: 3,
-						ap: 3,
-						shots: 1,
-						number: 1,
+						name: name || '',
+						toWoundModifier: str || 1,
+						ap: ap || 0,
+						shots: shots || 1,
+						number: number || 1,
 						results:{
+							hitChance: 0,
 							hit: 0,
+							woundChance: 0,
 							wound: 0,
+							unsavedChance: 0,
 							unsaved: 0,
 						}
 					};
@@ -54,11 +58,13 @@ angular.module('diceCalcApp')
 				
 				this.weapons = [];
 				
-				this.weapons.push(weaponProfile());
+				this.weapons.push(weaponProfile('Lasgun', 3, 0, 1, 35));
+				this.weapons.push(weaponProfile('Lascannon', 9, 2, 1, 5));
 								
 				this.defenderData = {
-						toHitModifier: 6,
+						toHitModifier: 7,
 						toWoundModifier: 6,
+						hp: 4,
 						saveModifiers: {
 							armor: 4,
 							cover: 3,
@@ -90,9 +96,14 @@ angular.module('diceCalcApp')
 					return this.calculatedData.hitChance = calcFactory.rollChance(this.attackerData.toWoundModifier, this.defenderData.toWoundModifier, this.settings);
 				},
 				calculateWeapon: function(weapon) {
-					console.log(this);
-					weapon.results.hit = threeDP(calcFactory.rollChance(this.attackerData.toHitModifier, this.defenderData.toHitModifier, this.settings));
-					weapon.results.wound = threeDP(calcFactory.rollChance(weapon.toWoundModifier, this.defenderData.toWoundModifier, this.settings));
+					var damage = weapon.shots * weapon.number;
+					
+					weapon.results.hitChance = threeDP(calcFactory.hitChance(this.attackerData.toHitModifier, this.defenderData.toHitModifier, this.settings));
+					weapon.results.hit = threeDP(damage * weapon.results.hitChance);
+					weapon.results.woundChance = threeDP(calcFactory.hitChance(weapon.toWoundModifier, this.defenderData.toWoundModifier + 4, this.settings));
+					weapon.results.wound = threeDP(weapon.results.hit * weapon.results.woundChance);
+					weapon.results.unsavedChance = threeDP(weapon.results.hitChance * weapon.results.woundChance);
+					weapon.results.unsaved = threeDP(weapon.shots * weapon.number * weapon.results.hitChance * weapon.results.woundChance);
 				},
 				calculateAll: function() {
 					console.log('calcall');
